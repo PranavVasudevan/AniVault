@@ -1,0 +1,248 @@
+/* =========================
+   ROOT THEME
+   ========================= */
+:root {
+  --bg-main: #050505;
+  --bg-panel: #0d0d0d;
+  --red-main: #c40000;
+  --red-dark: #7a0000;
+  --text-main: #ffffff;
+  --text-muted: #9a9a9a;
+  --gold: #ffcc00;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 500px at top, #220000, #050505),
+    #050505;
+  color: var(--text-main);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* =========================
+   NAVBAR
+   ========================= */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #2a0000;
+}
+
+.navbar h2 {
+  color: var(--red-main);
+  letter-spacing: 1px;
+}
+
+/* =========================
+   CONTROLS BAR
+   ========================= */
+.controls {
+  margin: 24px auto;
+  padding: 14px 20px;
+  max-width: 1400px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.controls-left,
+.controls-right {
+  display: flex;
+  gap: 12px;
+}
+
+.controls-left {
+  justify-self: start;
+}
+
+.controls-right {
+  justify-self: end;
+}
+
+/* =========================
+   INPUTS & BUTTONS
+   ========================= */
+input,
+select,
+textarea {
+  background: #0d0d0d;
+  color: white;
+  border: 1px solid #2a2a2a;
+  border-radius: 999px;
+  padding: 10px 16px;
+}
+
+input::placeholder {
+  color: #777;
+}
+
+button {
+  background: linear-gradient(135deg, var(--red-main), var(--red-dark));
+  border: none;
+  color: white;
+  border-radius: 999px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.ai-button.secondary {
+  background: #1a1a1a;
+  border: 1px solid #444;
+}
+
+/* =========================
+   HOME LAYOUT
+   ========================= */
+.home {
+  width: 100%;
+  padding-bottom: 40px;
+}
+
+.content {
+  padding: 0 32px;
+}
+
+/* =========================
+   ANIME GRID
+   ========================= */
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 22px;
+  margin-top: 24px;
+}
+
+/* =========================
+   ANIME CARD
+   ========================= */
+.anime-card {
+  background: linear-gradient(180deg, #111, #080808);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.anime-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(196,0,0,0.35);
+}
+
+.anime-card img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+}
+
+.anime-info {
+  padding: 12px;
+}
+
+.anime-info h3 {
+  font-size: 0.95rem;
+  margin: 0 0 6px;
+}
+
+.rating {
+  color: var(--gold);
+  font-size: 0.9rem;
+}
+
+/* =========================
+   DETAIL PAGE
+   ========================= */
+.detail-page {
+  padding: 40px;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+}
+
+.detail-poster img {
+  width: 100%;
+  border-radius: 16px;
+}
+
+.detail-main {
+  background: rgba(0,0,0,0.4);
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.detail-journal {
+  margin-top: 40px;
+  background: rgba(0,0,0,0.4);
+  padding: 24px;
+  border-radius: 16px;
+}
+
+/* =========================
+   AUTH PAGES
+   ========================= */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  background: linear-gradient(180deg, #140000, #060606);
+  padding: 32px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #2a0000;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.auth-switch a {
+  color: var(--red-main);
+  text-decoration: none;
+}
+
+/* =========================
+   MISC
+   ========================= */
+.loading,
+.end {
+  text-align: center;
+  color: var(--text-muted);
+  margin: 30px 0;
+}
+
