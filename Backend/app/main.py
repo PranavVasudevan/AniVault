@@ -9,6 +9,9 @@ from auth.auth_routes import router as auth_router
 from routes.recommendations import router as ai_router
 from app.database import engine, Base
 from app import models
+from fastapi import FastAPI
+
+
 
 
 
@@ -35,3 +38,7 @@ app.include_router(watchlist_router)
 app.include_router(journal_router)
 app.include_router(ai_router)
 Base.metadata.create_all(bind=engine)
+
+@app.get("/")
+def root():
+    return {"status": "ok"}

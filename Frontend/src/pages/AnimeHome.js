@@ -147,7 +147,7 @@ export default function AnimeHome() {
   return (
     <div className="home">
       <nav className="navbar">
-        <h2>AnimeVerse</h2>
+        <h2>AniVault</h2>
         <div>
           <button onClick={() => navigate("/favorites")}>Favorites</button>
           <button onClick={() => navigate("/watchlist")}>Watchlist</button>
