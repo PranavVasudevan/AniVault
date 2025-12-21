@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { authHeader } from "../services/auth";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
+
 export default function Profile() {
   const [journals, setJournals] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/journal", {
+    fetch(`${API_BASE}/journal`, {
       headers: authHeader(),
     })
       .then(r => r.json())

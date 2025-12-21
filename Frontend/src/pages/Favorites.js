@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { authHeader } from "../services/auth";
+const API_BASE = import.meta.env.VITE_API_URL;
 
-const API = "http://127.0.0.1:8000";
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([]);
@@ -14,7 +14,7 @@ export default function Favorites() {
 
   async function fetchFavorites() {
     try {
-      const res = await fetch(`${API}/favorites`, {
+      const res = await fetch(`${API_BASE}/favorites`, {
         headers: authHeader(),
       });
       const data = await res.json();

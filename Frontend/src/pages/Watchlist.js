@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { authHeader } from "../services/auth";
 
-const API = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL;
+
 
 export default function Watchlist() {
   const [entries, setEntries] = useState([]);
@@ -16,7 +17,7 @@ export default function Watchlist() {
 
   async function loadWatchlist() {
     try {
-      const res = await fetch(`${API}/watchlist`, {
+      const res = await fetch(`${API_BASE}/watchlist`, {
         headers: authHeader(),
       });
       const data = await res.json();

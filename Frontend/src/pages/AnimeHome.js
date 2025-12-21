@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout, authHeader } from "../services/auth";
 
-const API = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL;
+
 
 function dedupe(list) {
   const map = new Map();
@@ -43,7 +44,7 @@ export default function AnimeHome() {
     const params = new URLSearchParams({ page });
     if (genre) params.append("genre", genre);
 
-    const res = await fetch(`${API}/anime?${params}`);
+    const res = await fetch(`${API_BASE}/anime?${params}`);
     const data = await res.json();
 
     if (!Array.isArray(data) || data.length === 0) {
@@ -64,7 +65,7 @@ export default function AnimeHome() {
     setLoading(true);
 
     const res = await fetch(
-      `${API}/anime/search?q=${encodeURIComponent(search)}`
+      `${API_BASE}/anime/search?q=${encodeURIComponent(search)}`
     );
     const data = await res.json();
     setAnime(Array.isArray(data) ? dedupe(data) : []);
@@ -78,7 +79,7 @@ export default function AnimeHome() {
   setAiLoading(true);
 
   try {
-    const res = await fetch(`${API}/ai/recommend`, {
+    const res = await fetch(`${API_BASE}/ai/recommend`, {
       headers: authHeader(),
     });
     const data = await res.json();
@@ -91,7 +92,7 @@ export default function AnimeHome() {
 
     //  PARALLEL FETCH 
     const requests = data.titles.map(title =>
-      fetch(`${API}/anime/search?q=${encodeURIComponent(title)}`)
+      fetch(`${API_BASE}/anime/search?q=${encodeURIComponent(title)}`)
         .then(r => r.json())
         .then(j => j?.[0])
         .catch(() => null)

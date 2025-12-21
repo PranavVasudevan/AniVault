@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { authHeader } from "../services/auth";
 
-const API = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL;
+
 
 export default function AnimeDetail() {
   const { id } = useParams();
@@ -28,7 +29,7 @@ export default function AnimeDetail() {
 
   /* ========= FAVORITES ========= */
   async function checkFavorite() {
-    const res = await fetch(`${API}/favorites`, {
+    const res = await fetch(`${API_BASE}/favorites`, {
       headers: authHeader(),
     });
     const data = await res.json();
@@ -39,13 +40,13 @@ export default function AnimeDetail() {
     if (!anime) return;
 
     if (isFavorite) {
-      await fetch(`${API}/favorites/${anime.mal_id}`, {
+      await fetch(`${API_BASE}/favorites/${anime.mal_id}`, {
         method: "DELETE",
         headers: authHeader(),
       });
       setIsFavorite(false);
     } else {
-      await fetch(`${API}/favorites`, {
+      await fetch(`${API_BASE}/favorites`, {
         method: "POST",
         headers: authHeader(),
         body: JSON.stringify({
@@ -60,7 +61,7 @@ export default function AnimeDetail() {
 
   /* ========= WATCHLIST ========= */
   async function checkWatchlist() {
-    const res = await fetch(`${API}/watchlist`, {
+    const res = await fetch(`${API_BASE}/watchlist`, {
       headers: authHeader(),
     });
     const data = await res.json();
@@ -85,7 +86,7 @@ export default function AnimeDetail() {
   async function saveJournal() {
     if (!journal.trim()) return;
 
-    await fetch(`${API}/journal`, {
+    await fetch(`${API_BASE}/journal`, {
       method: "POST",
       headers: authHeader(),
       body: JSON.stringify({

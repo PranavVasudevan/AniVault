@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 
-const API = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export default function Register() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function Register() {
     setError("");
 
     try {
-      const res = await fetch(`${API}/auth/register`, {
+      const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

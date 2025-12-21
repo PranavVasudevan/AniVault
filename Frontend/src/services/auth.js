@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export function getToken() {
   return localStorage.getItem("token");
@@ -27,7 +27,7 @@ export function authHeader() {
 
 export async function login(username, password) {
   try {
-    const res = await fetch(`${API}/auth/login`, {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
