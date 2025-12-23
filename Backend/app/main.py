@@ -13,6 +13,11 @@ from app import models
 
 app = FastAPI()
 
+@app.middleware("http")
+async def debug_middleware(request, call_next):
+    print("MIDDLEWARE HIT:", request.method)
+    return await call_next(request)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
