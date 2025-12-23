@@ -148,7 +148,7 @@ export default function AnimeHome() {
   return (
     <div className="home">
       <nav className="navbar">
-        <h2>AniVault</h2>
+        <h2>AniAtlas</h2>
         <div>
           <button onClick={() => navigate("/favorites")}>Favorites</button>
           <button onClick={() => navigate("/watchlist")}>Watchlist</button>
@@ -205,25 +205,43 @@ export default function AnimeHome() {
       </div>
 
       <div className="content">
-        <div className="anime-grid">
-          {list.map((a, i) => {
-            const card = (
-              <Link to={`/anime/${a.mal_id}`} className="anime-card">
-                <img src={a.images?.jpg?.image_url} alt={a.title} />
-                <div className="anime-info">
-                  <h3>{a.title}</h3>
-                  <span className="rating">★ {a.score ?? "N/A"}</span>
-                </div>
-              </Link>
-            );
-            return i === list.length - 1 && mode === "home" ? (
-              <div ref={lastAnimeRef} key={a.mal_id}>{card}</div>
-            ) : (
-              <div key={a.mal_id}>{card}</div>
-            );
-          })}
+  <div className="anime-grid">
+    {list.map((a, i) => {
+      const year =
+        a.aired?.from ? new Date(a.aired.from).getFullYear() : "—";
+
+      const episodes = a.episodes ?? "—";
+
+      const card = (
+        <Link to={`/anime/${a.mal_id}`} className="anime-card">
+          <div className="anime-image-wrapper">
+            <img src={a.images?.jpg?.image_url} alt={a.title} />
+
+            
+            <div className="anime-hover">
+              <p>Year: {year}</p>
+              <p>Episodes: {episodes}</p>
+            </div>
+          </div>
+
+          <div className="anime-info">
+            <h3>{a.title}</h3>
+            <span className="rating">★ {a.score ?? "N/A"}</span>
+          </div>
+        </Link>
+      );
+
+      return i === list.length - 1 && mode === "home" ? (
+        <div ref={lastAnimeRef} key={a.mal_id}>
+          {card}
         </div>
-      </div>
+      ) : (
+        <div key={a.mal_id}>{card}</div>
+      );
+    })}
+  </div>
+</div>
+
 
       {loading && <p className="loading">Loading…</p>}
       {!loading && list.length === 0 && <p className="end">No anime found</p>}

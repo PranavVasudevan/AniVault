@@ -245,4 +245,38 @@ button:hover {
   color: var(--text-muted);
   margin: 30px 0;
 }
+.anime-card {
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.anime-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(255, 0, 0, 0.25);
+}
+
+.anime-card img {
+  transition: transform 0.3s ease;
+}
+
+.anime-card:hover img {
+  transform: scale(1.08);
+}
+
+/* metadata row */
+.meta {
+  display: flex;
+  gap: 8px;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.meta span {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
 
