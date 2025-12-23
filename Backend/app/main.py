@@ -10,6 +10,10 @@ from routes.recommendations import router as ai_router
 
 from app.database import engine, Base
 from app import models
+from fastapi.responses import Response
+
+
+
 
 app = FastAPI()
 
@@ -17,6 +21,10 @@ app = FastAPI()
 async def debug_middleware(request, call_next):
     print("MIDDLEWARE HIT:", request.method)
     return await call_next(request)
+
+@app.options("/{path:path}")
+async def preflight_handler(path: str):
+    return Response(status_code=200)
 
 app.add_middleware(
     CORSMiddleware,
