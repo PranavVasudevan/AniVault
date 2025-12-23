@@ -18,8 +18,9 @@ from fastapi.responses import Response
 app = FastAPI()
 
 @app.middleware("http")
-async def debug_middleware(request, call_next):
-    print("MIDDLEWARE HIT:", request.method)
+async def handle_preflight(request, call_next):
+    if request.method == "OPTIONS":
+        return Response(status_code=200)
     return await call_next(request)
 
 @app.options("/{path:path}")
@@ -28,11 +29,12 @@ async def preflight_handler(path: str):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=["https://ani-atlas.vercel.app"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 app.include_router(auth_router)
