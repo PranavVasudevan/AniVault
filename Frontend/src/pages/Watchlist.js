@@ -4,7 +4,6 @@ import { authHeader } from "../services/auth";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
-
 export default function Watchlist() {
   const [entries, setEntries] = useState([]);
   const [animeMap, setAnimeMap] = useState({});
@@ -12,37 +11,27 @@ export default function Watchlist() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  loadWatchlist();        
-}, [filter]);
+    fetchWatchlist();
+  }, []);
 
-  async function loadWatchlist() {
-    try {
-      const res = await fetch(`${API_BASE}/watchlist`, {
-        headers: authHeader(),
-      });
-      const data = await res.json();
+  async function fetchWatchlist() {
+    const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
+    const data = await res.json();
+    setEntries(data);
 
-      setEntries(data);
-
-      // fetch anime details
-      const map = {};
-      for (const item of data) {
-        const r = await fetch(
-          `https://api.jikan.moe/v4/anime/${item.anime_id}`
-        );
+    const map = {};
+    await Promise.all(
+      data.map(async item => {
+        const r = await fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`);
         const j = await r.json();
         map[item.anime_id] = j.data;
-      }
-      setAnimeMap(map);
-    } catch {
-      setEntries([]);
-    }
+      })
+    );
+    setAnimeMap(map);
     setLoading(false);
   }
 
-  const filtered = entries.filter(e =>
-    filter === "all" ? true : e.status === filter
-  );
+  const filtered = entries.filter(e => filter === "all" || e.status === filter);
 
   if (loading) return <p className="loading">Loading watchlist…</p>;
 
@@ -60,9 +49,7 @@ export default function Watchlist() {
         </select>
       </div>
 
-      {filtered.length === 0 && (
-        <p className="end">No anime in this category</p>
-      )}
+      {filtered.length === 0 && <p className="end">No anime in this category</p>}
 
       <div className="content">
         <div className="anime-grid">
@@ -73,10 +60,7 @@ export default function Watchlist() {
             return (
               <div key={w.anime_id} className="anime-card-wrapper">
                 <Link to={`/anime/${w.anime_id}`} className="anime-card">
-                  <img
-                    src={anime.images?.jpg?.image_url}
-                    alt={anime.title}
-                  />
+                  <img src={anime.images?.jpg?.image_url} alt={anime.title} />
                   <div className="anime-info">
                     <h3>{anime.title}</h3>
                     <span className="badge">{w.status}</span>
@@ -90,3 +74,4 @@ export default function Watchlist() {
     </div>
   );
 }
+
