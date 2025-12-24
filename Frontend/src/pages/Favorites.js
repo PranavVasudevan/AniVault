@@ -9,8 +9,10 @@ export default function Favorites() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchFavorites();
-  }, []);
+  fetch(`${API_BASE}/anime/search?q=${f.anime_id}`)
+    .then(r => r.json())
+    .then(j => setAnimeMap(m => ({ ...m, [f.anime_id]: j?.[0] })));
+}, []);
 
   async function fetchFavorites() {
     const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
