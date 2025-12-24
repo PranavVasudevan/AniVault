@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import Watchlist
@@ -14,28 +13,24 @@ def get_db():
     finally:
         db.close()
 
-class WatchRequest(BaseModel):
-    anime_id: int
-    status: str
-
-@router.post("")
+@router.post("/{anime_id}")
 def set_watchlist(
-    data: WatchRequest,
+    anime_id: int,
     user_id: int = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     entry = db.query(Watchlist).filter(
         Watchlist.user_id == user_id,
-        Watchlist.anime_id == data.anime_id
+        Watchlist.anime_id == anime_id
     ).first()
 
     if entry:
-        entry.status = data.status
+        entry.status = "watching"
     else:
         entry = Watchlist(
             user_id=user_id,
-            anime_id=data.anime_id,
-            status=data.status
+            anime_id=anime_id,
+            status="watching"
         )
         db.add(entry)
 
