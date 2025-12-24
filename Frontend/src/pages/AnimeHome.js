@@ -46,9 +46,11 @@ export default function AnimeHome() {
     const res = await fetch(`${API_BASE}/anime?${params}`);
     const data = await res.json();
 
-    if (!Array.isArray(data) || data.length === 0) setHasMore(false);
-    else setAnime(prev => dedupe([...prev, ...data]));
-
+    if (!Array.isArray(data) || data.length === 0) {
+      setHasMore(false);
+    } else {
+      setAnime(prev => dedupe([...prev, ...data]));
+    }
     setLoading(false);
   }
 
@@ -61,7 +63,9 @@ export default function AnimeHome() {
     setHasMore(false);
     setLoading(true);
 
-    const res = await fetch(`${API_BASE}/anime/search?q=${encodeURIComponent(search)}`);
+    const res = await fetch(
+      `${API_BASE}/anime/search?q=${encodeURIComponent(search)}`
+    );
     const data = await res.json();
     setAnime(Array.isArray(data) ? dedupe(data) : []);
     setLoading(false);
@@ -74,7 +78,9 @@ export default function AnimeHome() {
     setAiLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/ai`, { headers: authHeader() });
+      const res = await fetch(`${API_BASE}/ai/recommend`, {
+        headers: authHeader(),
+      });
       const data = await res.json();
 
       const requests = data.titles.map(title =>
@@ -87,6 +93,7 @@ export default function AnimeHome() {
       const results = await Promise.all(requests);
       const unique = new Map();
       results.filter(Boolean).forEach(a => unique.set(a.mal_id, a));
+
       setAiAnime(Array.from(unique.values()));
     } catch {
       setAiAnime([]);
@@ -98,8 +105,8 @@ export default function AnimeHome() {
   function goHome() {
     setMode("home");
     setSearch("");
-    setAiAnime([]);
     setAnime([]);
+    setAiAnime([]);
     setPage(1);
     setHasMore(true);
     setTimeout(fetchHome, 0);
@@ -109,7 +116,9 @@ export default function AnimeHome() {
     if (loading || mode !== "home") return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(e => {
-      if (e[0].isIntersecting && hasMore) setPage(p => p + 1);
+      if (e[0].isIntersecting && hasMore) {
+        setPage(p => p + 1);
+      }
     });
     node && observer.current.observe(node);
   };
@@ -128,38 +137,66 @@ export default function AnimeHome() {
       </nav>
 
       <div className="controls">
-        <input placeholder="Search anime" value={search} onChange={e => setSearch(e.target.value)} />
-        <button onClick={handleSearch}>Search</button>
+        <div className="controls-left">
+          <input
+            placeholder="Search anime"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
 
-        <select value={genre} onChange={e => { setGenre(e.target.value); setAnime([]); setPage(1); setHasMore(true); setMode("home"); }}>
-          <option value="">All genres</option>
-          <option value="1">Action</option>
-          <option value="4">Comedy</option>
-          <option value="8">Drama</option>
-          <option value="14">Horror</option>
-          <option value="22">Romance</option>
-          <option value="36">Slice of Life</option>
-          <option value="41">Thriller</option>
-        </select>
+          <select value={genre} onChange={e => {
+            setGenre(e.target.value);
+            setAnime([]);
+            setPage(1);
+            setHasMore(true);
+            setMode("home");
+          }}>
+            <option value="">All genres</option>
+            <option value="1">Action</option>
+            <option value="4">Comedy</option>
+            <option value="8">Drama</option>
+            <option value="14">Horror</option>
+            <option value="22">Romance</option>
+            <option value="36">Slice of Life</option>
+            <option value="41">Thriller</option>
+          </select>
+        </div>
 
-        <button onClick={loadAIRecommendations}>Recommend Anime</button>
+        <div className="controls-right">
+          <button className="ai-button" onClick={loadAIRecommendations} disabled={aiLoading}>
+            {aiLoading ? "Finding…" : "Recommend Anime"}
+          </button>
+        </div>
       </div>
 
       <div className="content">
         <div className="anime-grid">
           {list.map((a, i) => {
+            const year = a.aired?.from ? new Date(a.aired.from).getFullYear() : "—";
+            const episodes = a.episodes ?? "—";
+
             const card = (
               <Link to={`/anime/${a.mal_id}`} className="anime-card">
-                <img src={a.images?.jpg?.image_url} alt={a.title} />
+                <div className="anime-image-wrapper">
+                  <img src={a.images?.jpg?.image_url} alt={a.title} />
+                  <div className="anime-hover">
+                    <p>Year: {year}</p>
+                    <p>Episodes: {episodes}</p>
+                  </div>
+                </div>
                 <div className="anime-info">
                   <h3>{a.title}</h3>
                   <span className="rating">★ {a.score ?? "N/A"}</span>
                 </div>
               </Link>
             );
-            return i === list.length - 1 && mode === "home"
-              ? <div ref={lastAnimeRef} key={a.mal_id}>{card}</div>
-              : <div key={a.mal_id}>{card}</div>;
+
+            return i === list.length - 1 && mode === "home" ? (
+              <div ref={lastAnimeRef} key={a.mal_id}>{card}</div>
+            ) : (
+              <div key={a.mal_id}>{card}</div>
+            );
           })}
         </div>
       </div>
@@ -169,6 +206,7 @@ export default function AnimeHome() {
     </div>
   );
 }
+
  
 
 
