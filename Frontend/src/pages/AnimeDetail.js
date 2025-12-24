@@ -4,7 +4,6 @@ import { authHeader } from "../services/auth";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
-
 export default function AnimeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,11 +26,8 @@ export default function AnimeDetail() {
     setAnime(json.data);
   }
 
-  /* ========= FAVORITES ========= */
   async function checkFavorite() {
-    const res = await fetch(`${API_BASE}/favorites`, {
-      headers: authHeader(),
-    });
+    const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
     const data = await res.json();
     setIsFavorite(data.some(f => f.anime_id === Number(id)));
   }
@@ -46,24 +42,16 @@ export default function AnimeDetail() {
       });
       setIsFavorite(false);
     } else {
-      await fetch(`${API_BASE}/favorites`, {
+      await fetch(`${API_BASE}/favorites/${anime.mal_id}`, {
         method: "POST",
         headers: authHeader(),
-        body: JSON.stringify({
-          anime_id: anime.mal_id,
-          anime_title: anime.title,
-          anime_image: anime.images?.jpg?.image_url,
-        }),
       });
       setIsFavorite(true);
     }
   }
 
-  /* ========= WATCHLIST ========= */
   async function checkWatchlist() {
-    const res = await fetch(`${API_BASE}/watchlist`, {
-      headers: authHeader(),
-    });
+    const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
     const data = await res.json();
     const entry = data.find(w => w.anime_id === Number(id));
     if (entry) setWatchStatus(entry.status);
@@ -71,18 +59,12 @@ export default function AnimeDetail() {
 
   async function updateWatchlist(status) {
     setWatchStatus(status);
-
-    await fetch(`${API_BASE}/watchlist`, {
+    await fetch(`${API_BASE}/watchlist/${id}`, {
       method: "POST",
       headers: authHeader(),
-      body: JSON.stringify({
-        anime_id: Number(id),
-        status,
-      }),
     });
   }
 
-  /* ========= JOURNAL ========= */
   async function saveJournal() {
     if (!journal.trim()) return;
 
@@ -107,10 +89,7 @@ export default function AnimeDetail() {
 
       <div className="detail-layout">
         <div className="detail-poster">
-          <img
-            src={anime.images?.jpg?.large_image_url}
-            alt={anime.title}
-          />
+          <img src={anime.images?.jpg?.large_image_url} alt={anime.title} />
         </div>
 
         <div className="detail-main">
@@ -122,10 +101,7 @@ export default function AnimeDetail() {
               {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
             </button>
 
-            <select
-              value={watchStatus}
-              onChange={e => updateWatchlist(e.target.value)}
-            >
+            <select value={watchStatus} onChange={e => updateWatchlist(e.target.value)}>
               <option value="">Add to Watchlist</option>
               <option value="planned">Planned</option>
               <option value="watching">Watching</option>
@@ -140,27 +116,14 @@ export default function AnimeDetail() {
 
       <div className="detail-journal">
         <h3>Your Journal</h3>
-
-        <textarea
-          value={journal}
-          onChange={e => setJournal(e.target.value)}
-          placeholder="Write your thoughts…"
-        />
-
-        <input
-          type="number"
-          min="1"
-          max="10"
-          placeholder="Rating"
-          value={rating}
-          onChange={e => setRating(e.target.value)}
-        />
-
+        <textarea value={journal} onChange={e => setJournal(e.target.value)} />
+        <input type="number" min="1" max="10" value={rating} onChange={e => setRating(e.target.value)} />
         <button onClick={saveJournal}>Save Journal</button>
       </div>
     </div>
   );
 }
+
 
 
 
