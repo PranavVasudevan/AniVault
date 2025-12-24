@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { authHeader } from "../services/auth";
-const API_BASE = import.meta.env.VITE_API_URL;
 
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([]);
@@ -13,15 +13,9 @@ export default function Favorites() {
   }, []);
 
   async function fetchFavorites() {
-    try {
-      const res = await fetch(`${API_BASE}/favorites`, {
-        headers: authHeader(),
-      });
-      const data = await res.json();
-      setFavorites(Array.isArray(data) ? data : []);
-    } catch {
-      setFavorites([]);
-    }
+    const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
+    const data = await res.json();
+    setFavorites(Array.isArray(data) ? data : []);
     setLoading(false);
   }
 
@@ -31,7 +25,7 @@ export default function Favorites() {
       headers: authHeader(),
     });
 
-    setFavorites(prev => prev.filter(f => f.anime_id !== animeId));
+    fetchFavorites();   
   }
 
   if (loading) return <p className="loading">Loading favorites…</p>;
@@ -40,9 +34,7 @@ export default function Favorites() {
     <div className="home">
       <h1>Your Favorites</h1>
 
-      {favorites.length === 0 && (
-        <p className="end">No favorites yet</p>
-      )}
+      {favorites.length === 0 && <p className="end">No favorites yet</p>}
 
       <div className="content">
         <div className="anime-grid">
@@ -55,10 +47,7 @@ export default function Favorites() {
                 </div>
               </Link>
 
-              <button
-                className="danger"
-                onClick={() => removeFavorite(f.anime_id)}
-              >
+              <button className="danger" onClick={() => removeFavorite(f.anime_id)}>
                 Remove
               </button>
             </div>
