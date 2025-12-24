@@ -26,7 +26,7 @@ export default function Favorites() {
   }
 
   async function removeFavorite(animeId) {
-    await fetch(`${API}/favorites/${animeId}`, {
+    await fetch(`${API_BASE}/favorites/${animeId}`, {
       method: "DELETE",
       headers: authHeader(),
     });

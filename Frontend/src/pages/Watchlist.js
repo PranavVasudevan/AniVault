@@ -12,8 +12,8 @@ export default function Watchlist() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadWatchlist();
-  }, []);
+  loadWatchlist();        
+}, [filter]);
 
   async function loadWatchlist() {
     try {

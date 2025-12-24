@@ -72,7 +72,7 @@ export default function AnimeDetail() {
   async function updateWatchlist(status) {
     setWatchStatus(status);
 
-    await fetch(`${API}/watchlist`, {
+    await fetch(`${API_BASE}/watchlist`, {
       method: "POST",
       headers: authHeader(),
       body: JSON.stringify({
@@ -161,4 +161,8 @@ export default function AnimeDetail() {
     </div>
   );
 }
+
+
+
+
 
