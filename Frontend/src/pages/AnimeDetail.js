@@ -7,7 +7,6 @@ const API_BASE = process.env.REACT_APP_API_URL;
 export default function AnimeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [anime, setAnime] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [watchStatus, setWatchStatus] = useState("");
@@ -40,7 +39,7 @@ export default function AnimeDetail() {
       method: "POST",
       headers: authHeader(),
     });
-    alert("Journal saved");
+    alert("Saved");
   }
 
   if (!anime) return null;
@@ -63,6 +62,7 @@ export default function AnimeDetail() {
     </div>
   );
 }
+
 
 
 
