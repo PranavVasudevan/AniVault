@@ -5,40 +5,68 @@ import { authHeader } from "../services/auth";
 const API_BASE = process.env.REACT_APP_API_URL;
 
 export default function Watchlist() {
-  const [items, setItems] = useState([]);
-  const [map, setMap] = useState({});
+  const [entries, setEntries] = useState([]);
+  const [animeMap, setAnimeMap] = useState({});
+  const [filter, setFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_BASE}/watchlist`, { headers: authHeader() })
-      .then(r => r.json())
-      .then(d => {
-        setItems(d);
-        d.forEach(w =>
-          fetch(`https://api.jikan.moe/v4/anime/${w.anime_id}`)
-            .then(r => r.json())
-            .then(j => setMap(m => ({ ...m, [w.anime_id]: j.data })))
-        );
-      });
+    load();
   }, []);
+
+  async function load() {
+    const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
+    const data = await res.json();
+    setEntries(data);
+
+    const map = {};
+    for (const item of data) {
+      const r = await fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`);
+      const j = await r.json();
+      map[item.anime_id] = j.data;
+    }
+    setAnimeMap(map);
+    setLoading(false);
+  }
+
+  const filtered = entries.filter(e => filter === "all" || e.status === filter);
+
+  if (loading) return <p className="loading">Loading watchlist…</p>;
 
   return (
     <div className="home">
       <h1>Your Watchlist</h1>
-      <div className="anime-grid">
-        {items.map(w => {
-          const a = map[w.anime_id];
-          if (!a) return null;
-          return (
-            <Link key={w.anime_id} to={`/anime/${w.anime_id}`} className="anime-card">
-              <img src={a.images?.jpg?.image_url} alt={a.title} />
-              <div className="anime-info"><h3>{a.title}</h3></div>
-            </Link>
-          );
-        })}
+
+      <div className="controls">
+        <select value={filter} onChange={e => setFilter(e.target.value)}>
+          <option value="all">All</option>
+          <option value="planned">Planned</option>
+          <option value="watching">Watching</option>
+          <option value="completed">Completed</option>
+          <option value="dropped">Dropped</option>
+        </select>
+      </div>
+
+      <div className="content">
+        <div className="anime-grid">
+          {filtered.map(w => {
+            const anime = animeMap[w.anime_id];
+            if (!anime) return null;
+
+            return (
+              <Link to={`/anime/${w.anime_id}`} key={w.anime_id} className="anime-card">
+                <img src={anime.images?.jpg?.image_url} alt={anime.title} />
+                <div className="anime-info">
+                  <h3>{anime.title}</h3>
+                  <span className="badge">{w.status}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
-
 
 
