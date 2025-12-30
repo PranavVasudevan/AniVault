@@ -14,6 +14,8 @@ export function logout() {
 
 export function authHeader() {
   const token = getToken();
+  if (!token) return { "Content-Type": "application/json" };
+
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -37,5 +39,4 @@ export async function login(username, password) {
     return false;
   }
 }
-
 
