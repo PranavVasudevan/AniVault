@@ -15,17 +15,21 @@ export default function Watchlist() {
   }, []);
 
   async function load() {
-    const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
-    const data = await res.json();
-    setEntries(data);
+    try {
+      const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
+      const data = await res.json();
+      setEntries(data);
 
-    const map = {};
-    for (const item of data) {
-      const r = await fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`);
-      const j = await r.json();
-      map[item.anime_id] = j.data;
+      const map = {};
+      for (const w of data) {
+        const r = await fetch(`https://api.jikan.moe/v4/anime/${w.anime_id}`);
+        const j = await r.json();
+        map[w.anime_id] = j.data;
+      }
+      setAnimeMap(map);
+    } catch {
+      setEntries([]);
     }
-    setAnimeMap(map);
     setLoading(false);
   }
 
@@ -46,6 +50,8 @@ export default function Watchlist() {
           <option value="dropped">Dropped</option>
         </select>
       </div>
+
+      {filtered.length === 0 && <p className="end">No anime in this category</p>}
 
       <div className="content">
         <div className="anime-grid">
@@ -68,5 +74,4 @@ export default function Watchlist() {
     </div>
   );
 }
-
 
