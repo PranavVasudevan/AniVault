@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout, authHeader } from "../services/auth";
 
-const API_BASE = import.meta.env.VITE_API_URL;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 function dedupe(list) {
   const map = new Map();
