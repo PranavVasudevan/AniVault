@@ -39,7 +39,8 @@ export default function Watchlist() {
 
   return (
     <div className="home">
-      <h1>Your Watchlist</h1>
+      <h1 className="section-title">Watchlist</h1>
+
 
       <div className="controls">
         <select value={filter} onChange={e => setFilter(e.target.value)}>

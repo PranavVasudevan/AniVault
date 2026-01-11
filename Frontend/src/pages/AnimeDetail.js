@@ -93,33 +93,42 @@ export default function AnimeDetail() {
       <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
 
       <div className="detail-layout">
-        <div className="detail-poster">
-          <img src={anime.images?.jpg?.large_image_url} alt={anime.title} />
+       <div className="detail-hero">
+          <img src={anime.images?.jpg?.large_image_url} />
+          <div className="hero-glow" />
         </div>
+
 
         <div className="detail-main">
           <h1>{anime.title}</h1>
           <p className="rating">★ {anime.score ?? "N/A"}</p>
 
-          <div className="detail-actions">
-            <button className="primary" onClick={toggleFavorite}>
-              {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-            </button>
+          <div className="action-bar">
+           <button className={isFavorite ? "danger" : ""} onClick={toggleFavorite}>
+             {isFavorite ? "Remove Favorite" : "Add Favorite"}
+               </button>
 
-            <select value={watchStatus} onChange={e => updateWatchlist(e.target.value)}>
-              <option value="">Add to Watchlist</option>
-              <option value="planned">Planned</option>
-              <option value="watching">Watching</option>
-              <option value="completed">Completed</option>
-              <option value="dropped">Dropped</option>
-            </select>
-          </div>
+                 <select value={watchStatus} onChange={e => updateWatchlist(e.target.value)}>
+                 <option value="">Watchlist</option>
+                 <option value="planned">Planned</option>
+                 <option value="watching">Watching</option>
+                 <option value="completed">Completed</option>
+                 <option value="dropped">Dropped</option>
+             </select>
+           </div>
+
 
           <p className="synopsis">{anime.synopsis}</p>
+          <div className="meta">
+           <span>{anime.episodes ?? "?"} episodes</span>
+           <span>{anime.aired?.from?.slice(0,4)}</span>
+           <span>{anime.rating}</span>
+</div>
+
         </div>
       </div>
 
-      <div className="detail-journal">
+      <div className="journal-glass">
         <h3>Your Journal</h3>
         <textarea placeholder="Write your thoughts…" value={journal} onChange={e => setJournal(e.target.value)} />
         <input type="number" min="1" max="10" placeholder="Rating" value={rating} onChange={e => setRating(e.target.value)} />

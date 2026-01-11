@@ -44,7 +44,8 @@ export default function Favorites() {
 
   return (
     <div className="home">
-      <h1>Your Favorites</h1>
+      <h1 className="section-title">Favorites</h1>
+
 
       {items.length === 0 && <p className="end">No favorites yet</p>}
 

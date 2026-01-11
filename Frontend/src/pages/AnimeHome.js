@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout, authHeader } from "../services/auth";
+import SkeletonCard from "../components/SkeletonCard";
+
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -127,14 +129,21 @@ export default function AnimeHome() {
 
   return (
     <div className="home">
-      <nav className="navbar">
-        <h2>AniAtlas</h2>
-        <div>
-          <button onClick={() => navigate("/favorites")}>Favorites</button>
-          <button onClick={() => navigate("/watchlist")}>Watchlist</button>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      </nav>
+  <nav className="navbar">
+    <h2 className="brand">AniAtlas</h2>
+
+    <div>
+      <button onClick={() => navigate("/favorites")}>Favorites</button>
+      <button onClick={() => navigate("/watchlist")}>Watchlist</button>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  </nav>
+
+  <div className="hero">
+    <h1>Discover your next anime</h1>
+    <p>AI-powered recommendations based on what you like.</p>
+  </div>
+
 
       <div className="controls">
         <div className="controls-left">
@@ -169,6 +178,19 @@ export default function AnimeHome() {
           </button>
         </div>
       </div>
+{mode === "ai" && aiAnime.length > 0 && (
+  <div className="spotlight">
+    <h2>Recommended For You</h2>
+    <div className="spotlight-row">
+      {aiAnime.slice(0, 5).map(a => (
+        <Link to={`/anime/${a.mal_id}`} key={a.mal_id} className="spotlight-card">
+          <img src={a.images?.jpg?.image_url} />
+          <span>{a.title}</span>
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
 
       <div className="content">
         <div className="anime-grid">
@@ -181,9 +203,11 @@ export default function AnimeHome() {
                 <div className="anime-image-wrapper">
                   <img src={a.images?.jpg?.image_url} alt={a.title} />
                   <div className="anime-hover">
-                    <p>Year: {year}</p>
-                    <p>Episodes: {episodes}</p>
+                    <span className="hover-pill">⭐ {a.score ?? "N/A"}</span>
+                    <span className="hover-pill">{episodes} eps</span>
+                    <span className="hover-pill">{year}</span>
                   </div>
+
                 </div>
                 <div className="anime-info">
                   <h3>{a.title}</h3>
@@ -201,7 +225,12 @@ export default function AnimeHome() {
         </div>
       </div>
 
-      {loading && <p className="loading">Loading…</p>}
+      {loading && (
+  <div className="anime-grid">
+    {Array.from({ length: 10 }).map((_, i) => <SkeletonCard key={i} />)}
+  </div>
+)}
+
       {!loading && list.length === 0 && <p className="end">No anime found</p>}
     </div>
   );
