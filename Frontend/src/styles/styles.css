@@ -189,7 +189,8 @@ button:hover {
 }
 
 .detail-main {
-  background: rgba(0,0,0,0.4);
+  background: linear-gradient(180deg, rgba(15,15,15,0.85), rgba(5,5,5,0.9));
+  border: 1px solid rgba(255,255,255,0.05);
   padding: 24px;
   border-radius: 16px;
 }
@@ -418,23 +419,18 @@ button:active {
 .hero p {
   color: #bbb;
 }
-
-.anime-hover {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,.9), transparent 60%);
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  justify-content: flex-start;
-  padding: 12px;
-  opacity: 0;
-  transition: opacity .3s ease;
+.anime-card {
+  position: relative;
+  transition: transform .25s ease, box-shadow .25s ease;
 }
 
-.anime-card:hover .anime-hover {
-  opacity: 1;
+.anime-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow:
+    0 0 0 1px rgba(255,0,0,.35),
+    0 18px 60px rgba(255,0,0,.35);
 }
+
 
 .hover-pill {
   background: rgba(0,0,0,.65);
@@ -443,19 +439,6 @@ button:active {
   font-size: .75rem;
 }
 
-.anime-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  border: 1px solid rgba(255,0,0,0.4);
-  opacity: 0;
-  transition: opacity .3s ease;
-}
-
-.anime-card:hover::before {
-  opacity: 1;
-}
 .skeleton-card {
   height: 320px;
   border-radius: 16px;

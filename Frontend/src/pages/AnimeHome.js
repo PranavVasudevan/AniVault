@@ -27,6 +27,8 @@ export default function AnimeHome() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
+  const [mediaType, setMediaType] = useState("tv");
+
 
   function handleLogout() {
     logout();
@@ -42,7 +44,7 @@ export default function AnimeHome() {
     if (loading || !hasMore) return;
     setLoading(true);
 
-    const params = new URLSearchParams({ page });
+    const params = new URLSearchParams({ page, type: mediaType });
     if (genre) params.append("genre", genre);
 
     const res = await fetch(`${API_BASE}/anime?${params}`);
@@ -73,41 +75,50 @@ export default function AnimeHome() {
     setLoading(false);
   }
 
-  async function loadAIRecommendations() {
-    setMode("ai");
-    setAnime([]);
-    setAiAnime([]);
-    setAiLoading(true);
+  async function loadAIRecommendations(type = "anime", genre = "") {
+  setMode(type === "movie" ? "ai-movie" : "ai");
+  setAnime([]);
+  setAiAnime([]);
+  setAiLoading(true);
 
-    try {
-      const res = await fetch(`${API_BASE}/ai/recommend`, {
-        headers: authHeader(),
-      });
-      const data = await res.json();
+  const qs = new URLSearchParams({ type });
+  if (genre) qs.append("genre", genre);
 
-      const requests = data.titles.map(title =>
-        fetch(`${API_BASE}/anime/search?q=${encodeURIComponent(title)}`)
-          .then(r => r.json())
-          .then(j => j?.[0])
-          .catch(() => null)
-      );
+  const res = await fetch(
+  `${API_BASE}/ai/recommend?type=${type}&genre=${genre}`,
+  { headers: authHeader() }
+);
 
-      const results = await Promise.all(requests);
-      const unique = new Map();
-      results.filter(Boolean).forEach(a => unique.set(a.mal_id, a));
 
-      setAiAnime(Array.from(unique.values()));
-    } catch {
-      setAiAnime([]);
-    }
+  const data = await res.json();
 
-    setAiLoading(false);
-  }
+if (!Array.isArray(data.titles)) {
+  setAiAnime([]);
+  setAiLoading(false);
+  return;
+}
+
+// convert titles → real anime cards
+const requests = data.titles.map(t =>
+  fetch(`${API_BASE}/anime/search?q=${encodeURIComponent(t)}`)
+    .then(r => r.json())
+    .then(j => j?.[0])
+    .catch(() => null)
+);
+
+const results = await Promise.all(requests);
+const unique = new Map();
+results.filter(Boolean).forEach(a => unique.set(a.mal_id, a));
+setAiAnime([...unique.values()]);
+
+}
+
 
   function goHome() {
     setMode("home");
     setSearch("");
     setAnime([]);
+    setHasMore(true);
     setAiAnime([]);
     setPage(1);
     setHasMore(true);
@@ -125,7 +136,8 @@ export default function AnimeHome() {
     node && observer.current.observe(node);
   };
 
-  const list = mode === "ai" ? aiAnime : anime;
+ const list = mode.startsWith("ai") ? aiAnime : anime;
+
 
   return (
     <div className="home">
@@ -153,6 +165,16 @@ export default function AnimeHome() {
             onChange={e => setSearch(e.target.value)}
           />
           <button onClick={handleSearch}>Search</button>
+          <select value={mediaType} onChange={e => {
+            setMediaType(e.target.value);
+            setAnime([]);
+            setPage(1);
+            setHasMore(true);
+            }}>
+           <option value="tv">Series</option>
+           <option value="movie">Movies</option>
+           </select>
+
 
           <select value={genre} onChange={e => {
             setGenre(e.target.value);
@@ -171,12 +193,42 @@ export default function AnimeHome() {
             <option value="41">Thriller</option>
           </select>
         </div>
+        <div className="controls-center">
+  <button className="ai-button secondary" onClick={goHome}>
+    Home
+  </button>
+</div>
+
 
         <div className="controls-right">
-          <button className="ai-button" onClick={loadAIRecommendations} disabled={aiLoading}>
-            {aiLoading ? "Finding…" : "Recommend Anime"}
-          </button>
-        </div>
+  <button
+    className="ai-button"
+    onClick={() => loadAIRecommendations("anime")}
+    disabled={aiLoading}
+  >
+    Recommend Anime
+  </button>
+
+  <button
+    className="ai-button secondary"
+    onClick={() => loadAIRecommendations("movie")}
+    disabled={aiLoading}
+  >
+    Recommend Movies
+  </button>
+</div>
+{mode === "ai-movie" && (
+  <div className="controls-right">
+    <select onChange={e => loadAIRecommendations("movie", e.target.value)}>
+      <option value="">All Movie Genres</option>
+      <option value="1">Action</option>
+      <option value="8">Drama</option>
+      <option value="10">Fantasy</option>
+      <option value="22">Romance</option>
+    </select>
+  </div>
+)}
+
       </div>
 {mode === "ai" && aiAnime.length > 0 && (
   <div className="spotlight">
@@ -203,7 +255,6 @@ export default function AnimeHome() {
                 <div className="anime-image-wrapper">
                   <img src={a.images?.jpg?.image_url} alt={a.title} />
                   <div className="anime-hover">
-                    <span className="hover-pill">⭐ {a.score ?? "N/A"}</span>
                     <span className="hover-pill">{episodes} eps</span>
                     <span className="hover-pill">{year}</span>
                   </div>
