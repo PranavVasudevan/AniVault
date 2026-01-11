@@ -47,7 +47,8 @@ export default function AnimeHome() {
     const params = new URLSearchParams({ page, type: mediaType });
     if (genre) params.append("genre", genre);
 
-    const res = await fetch(`${API_BASE}/anime?${params}`);
+    const endpoint = mediaType === "movie" ? "anime/movies" : "anime";
+    const res = await fetch(`${API_BASE}/${endpoint}?${params}`);
     const data = await res.json();
 
     if (!Array.isArray(data) || data.length === 0) {
@@ -75,43 +76,28 @@ export default function AnimeHome() {
     setLoading(false);
   }
 
-  async function loadAIRecommendations(type = "anime", genre = "") {
+  async function loadAIRecommendations(type = "tv", genre = null) {
   setMode(type === "movie" ? "ai-movie" : "ai");
   setAnime([]);
   setAiAnime([]);
   setAiLoading(true);
 
   const qs = new URLSearchParams({ type });
-  if (genre) qs.append("genre", genre);
+  if (genre !== null && genre !== "") qs.append("genre", genre);
 
-  const res = await fetch(
-  `${API_BASE}/ai/recommend?type=${type}&genre=${genre}`,
-  { headers: authHeader() }
-);
-
+  const res = await fetch(`${API_BASE}/ai/recommend?${qs}`, {
+    headers: authHeader(),
+  });
 
   const data = await res.json();
-
-if (!Array.isArray(data.titles)) {
-  setAiAnime([]);
+  setAiAnime(Array.isArray(data) ? data : []);
   setAiLoading(false);
-  return;
 }
 
-// convert titles → real anime cards
-const requests = data.titles.map(t =>
-  fetch(`${API_BASE}/anime/search?q=${encodeURIComponent(t)}`)
-    .then(r => r.json())
-    .then(j => j?.[0])
-    .catch(() => null)
-);
 
-const results = await Promise.all(requests);
-const unique = new Map();
-results.filter(Boolean).forEach(a => unique.set(a.mal_id, a));
-setAiAnime([...unique.values()]);
 
-}
+
+
 
 
   function goHome() {
@@ -203,7 +189,7 @@ setAiAnime([...unique.values()]);
         <div className="controls-right">
   <button
     className="ai-button"
-    onClick={() => loadAIRecommendations("anime")}
+    onClick={() => loadAIRecommendations("tv")}
     disabled={aiLoading}
   >
     Recommend Anime
