@@ -578,5 +578,22 @@ button:active {
 .anime-card:hover::before {
   opacity: 1;
 }
+.anime-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255,0,0,0.45);
+  box-shadow: 0 0 0 rgba(255,0,0,0);
+  opacity: 0;
+  transition: opacity .25s ease, box-shadow .25s ease;
+}
+
+.anime-card:hover::before {
+  opacity: 1;
+  box-shadow: 
+    0 0 20px rgba(255,0,0,.25),
+    0 0 60px rgba(255,0,0,.15);
+}
 
 

@@ -1,11 +1,5 @@
 
-const API_BASE = process.env.REACT_APP_API_URL
-
-
-
-;
-
-
+const API_BASE = process.env.REACT_APP_API_URL;
 
 export async function fetchAnime({ search = "", mood = "", page = 1 }) {
   const url = `${API_BASE}?search=${encodeURIComponent(search)}&mood=${encodeURIComponent(mood)}&page=${page}`;

@@ -12,6 +12,7 @@ JIKAN_URL = "https://api.jikan.moe/v4/anime"
 async def get_anime(
     page: int = 1,
     genre: int | None = None,
+    type: str = "tv"
 ):
     params = {
         "page": page,
@@ -19,10 +20,12 @@ async def get_anime(
         "sfw": "true",
         "order_by": "score",
         "sort": "desc",
+        "type": type,   # ← this line was missing
     }
 
     if genre:
         params["genres"] = genre
+
 
     try:
         async with httpx.AsyncClient(timeout=10) as client:
