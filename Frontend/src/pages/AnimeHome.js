@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout, authHeader } from "../services/auth";
+import { isLoggedIn } from "../services/auth";
 import SkeletonCard from "../components/SkeletonCard";
 
 
@@ -78,6 +79,7 @@ export default function AnimeHome() {
   }
 
   async function loadAIRecommendations(type = "tv", genre = null) {
+  if (!isLoggedIn()) return;
   setMode(type === "movie" ? "ai-movie" : "ai");
   setAnime([]);
   setAiAnime([]);
@@ -255,9 +257,14 @@ export default function AnimeHome() {
             );
 
             return i === list.length - 1 && mode === "home" ? (
-              <div ref={lastAnimeRef} key={a.mal_id}>{card}</div>
+              <div ref={lastAnimeRef} key={a.mal_id} className="card-shell">
+  {card}
+</div>
+
             ) : (
-              <div key={a.mal_id}>{card}</div>
+              <div key={a.mal_id} className="card-shell">
+  {card}
+</div>
             );
           })}
         </div>

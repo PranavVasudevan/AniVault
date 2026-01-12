@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { authHeader } from "../services/auth";
+import { isLoggedIn } from "../services/auth";
 
 const API_BASE = process.env.REACT_APP_API_URL
 
@@ -8,10 +9,12 @@ export default function Profile() {
   const [journals, setJournals] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/journal`, { headers: authHeader() })
-      .then(r => r.json())
-      .then(setJournals);
-  }, []);
+  if (!isLoggedIn()) return;
+
+  fetch(`${API_BASE}/journal`, { headers: authHeader() })
+    .then(r => r.json())
+    .then(setJournals);
+}, []);
 
   return (
     <div className="profile-glass">

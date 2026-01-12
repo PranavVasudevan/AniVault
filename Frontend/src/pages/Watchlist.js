@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { authHeader } from "../services/auth";
+import { isLoggedIn } from "../services/auth";
 
 const API_BASE = process.env.REACT_APP_API_URL
 
@@ -13,6 +14,8 @@ export default function Watchlist() {
 
   useEffect(() => {
     load();
+    if (!isLoggedIn()) return;
+   load();
   }, []);
 
   async function load() {

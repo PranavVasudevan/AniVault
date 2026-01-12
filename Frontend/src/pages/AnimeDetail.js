@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { authHeader } from "../services/auth";
+import { isLoggedIn } from "../services/auth";
 
 const API_BASE = process.env.REACT_APP_API_URL
 
@@ -28,6 +29,7 @@ export default function AnimeDetail() {
   }
 
   async function checkFavorite() {
+    if (!isLoggedIn()) return;
   const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
   const data = await res.json();
 
@@ -61,6 +63,7 @@ export default function AnimeDetail() {
   }
 
   async function checkWatchlist() {
+  if (!isLoggedIn()) return;
   const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
   const data = await res.json();
 
