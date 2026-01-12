@@ -135,20 +135,6 @@ button:hover {
 /* =========================
    ANIME CARD
    ========================= */
-.anime-card {
-  background: linear-gradient(180deg, #111, #080808);
-  border-radius: 16px;
-  overflow: hidden;
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.anime-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(196,0,0,0.35);
-}
 
 .anime-card img {
   width: 100%;
@@ -246,16 +232,6 @@ button:hover {
   color: var(--text-muted);
   margin: 30px 0;
 }
-.anime-card {
-  position: relative;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  overflow: hidden;
-}
-
-.anime-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 12px 25px rgba(255, 0, 0, 0.25);
-}
 
 .anime-card img {
   transition: transform 0.3s ease;
@@ -279,11 +255,6 @@ button:hover {
   padding: 2px 6px;
   border-radius: 6px;
 }
-
-.anime-card {
-  border: 1px solid rgba(255,255,255,0.06);
-  background: linear-gradient(180deg, #141414, #090909);
-}
 /* ===== PREMIUM LIGHT SYSTEM ===== */
 
 .glow-panel {
@@ -304,20 +275,7 @@ button:hover {
   pointer-events: none;
   box-shadow: inset 0 0 60px rgba(255,0,0,0.12);
 }
-.anime-card {
-  position: relative;
-  background: linear-gradient(180deg, #141414, #080808);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.65);
-  transition: transform 0.35s cubic-bezier(.2,.8,.2,1),
-              box-shadow 0.35s cubic-bezier(.2,.8,.2,1);
-}
 
-.anime-card:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 35px 90px rgba(196,0,0,0.35);
-}
 .controls {
   margin: 28px auto;
   padding: 18px 24px;
@@ -419,18 +377,6 @@ button:active {
 .hero p {
   color: #bbb;
 }
-.anime-card {
-  position: relative;
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-
-.anime-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 0 0 1px rgba(255,0,0,.15),
-              0 12px 40px rgba(255,0,0,.18);
-}
-
-
 
 .hover-pill {
   background: rgba(0,0,0,.65);
@@ -545,22 +491,25 @@ button:active {
   font-size: .8rem;
   opacity: .8;
 }
+/* =========================
+   NEON CARD PERIMETER GLOW
+   ========================= */
+
 .anime-card {
-  border: 1px solid rgba(255,255,255,0.35);
-  box-shadow: 0 0 0 rgba(255,0,0,0);
-  transition: all .25s ease;
+  position: relative;
+  border-radius: 16px;
+  overflow: visible;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, #141414, #090909);
+  transition: transform .25s ease, box-shadow .25s ease;
 }
 
 .anime-card:hover {
-  border: 1px solid #ff3b3b;
+  transform: translateY(-6px) scale(1.02);
   box-shadow:
     0 0 12px rgba(255,0,0,.55),
-    0 0 24px rgba(255,0,0,.35),
-    0 0 48px rgba(255,0,0,.25);
-}
-.anime-card {
-  position: relative;
-  overflow: visible;   /* <— IMPORTANT */
+    0 0 26px rgba(255,0,0,.35),
+    0 0 50px rgba(255,0,0,.25);
 }
 
 .anime-card::before {
@@ -568,8 +517,10 @@ button:active {
   position: absolute;
   inset: -2px;
   border-radius: 18px;
-  box-shadow: 0 0 20px rgba(255,0,0,.6),
-              0 0 40px rgba(255,0,0,.35);
+  border: 1px solid rgba(255,0,0,.5);
+  box-shadow:
+    0 0 18px rgba(255,0,0,.4),
+    0 0 40px rgba(255,0,0,.2);
   opacity: 0;
   transition: opacity .3s ease;
   pointer-events: none;
@@ -578,22 +529,4 @@ button:active {
 .anime-card:hover::before {
   opacity: 1;
 }
-.anime-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  border: 1px solid rgba(255,0,0,0.45);
-  box-shadow: 0 0 0 rgba(255,0,0,0);
-  opacity: 0;
-  transition: opacity .25s ease, box-shadow .25s ease;
-}
-
-.anime-card:hover::before {
-  opacity: 1;
-  box-shadow: 
-    0 0 20px rgba(255,0,0,.25),
-    0 0 60px rgba(255,0,0,.15);
-}
-
 

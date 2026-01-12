@@ -1,11 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 export function getToken() {
   return localStorage.getItem("token");
-}
-
-export function isLoggedIn() {
-  return !!getToken();
 }
 
 export function logout() {
@@ -15,10 +11,9 @@ export function logout() {
 export function authHeader() {
   const token = getToken();
   if (!token) return {};
-
   return {
+    "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json"
   };
 }
 
@@ -35,4 +30,3 @@ export async function login(username, password) {
   localStorage.setItem("token", data.access_token);
   return true;
 }
-
