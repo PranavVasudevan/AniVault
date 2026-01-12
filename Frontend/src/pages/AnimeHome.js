@@ -4,7 +4,7 @@ import { logout, authHeader } from "../services/auth";
 import SkeletonCard from "../components/SkeletonCard";
 
 
-const API_BASE = import.meta.env.VITE_API_URL
+const API_BASE = process.env.REACT_APP_API_URL
 
 
 function dedupe(list) {
