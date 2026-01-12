@@ -2,6 +2,7 @@ from fastapi import Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from auth.auth_utils import decode_token
+from fastapi import Header
 
 def get_db():
     db = SessionLocal()
@@ -10,16 +11,18 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(request: Request):
-    raw = request.headers.get("authorization")
-
-    if not raw:
+def get_current_user(authorization: str | None = Header(None)):
+    if not authorization:
         raise HTTPException(status_code=401, detail="Missing auth header")
 
-    token = raw.replace("Bearer ", "")
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid auth header")
+
+    token = authorization.replace("Bearer ", "")
     payload = decode_token(token)
 
     if not payload or "user_id" not in payload:
         raise HTTPException(status_code=401, detail="Invalid token")
 
     return payload["user_id"]
+
