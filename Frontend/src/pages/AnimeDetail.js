@@ -28,10 +28,14 @@ export default function AnimeDetail() {
   }
 
   async function checkFavorite() {
-    const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
-    const data = await res.json();
+  const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
+  const data = await res.json();
+
+  if (Array.isArray(data)) {
     setIsFavorite(data.some(f => f.anime_id === Number(id)));
   }
+}
+
 
   async function toggleFavorite() {
     if (!anime) return;
@@ -57,11 +61,15 @@ export default function AnimeDetail() {
   }
 
   async function checkWatchlist() {
-    const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
-    const data = await res.json();
+  const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
+  const data = await res.json();
+
+  if (Array.isArray(data)) {
     const entry = data.find(w => w.anime_id === Number(id));
     if (entry) setWatchStatus(entry.status);
   }
+}
+
 
   async function updateWatchlist(status) {
     setWatchStatus(status);

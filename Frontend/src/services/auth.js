@@ -14,14 +14,10 @@ export function logout() {
 }
 
 export function authHeader() {
-  const token = getToken();
-  if (!token) return { "Content-Type": "application/json" };
-
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
+
 
 export async function login(username, password) {
   try {
