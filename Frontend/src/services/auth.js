@@ -4,17 +4,19 @@ export function getToken() {
   return localStorage.getItem("token");
 }
 
+export function isLoggedIn() {
+  return !!getToken();
+}
+
 export function logout() {
   localStorage.removeItem("token");
 }
 
 export function authHeader() {
   const token = getToken();
-  if (!token) return {};
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
+  return token
+    ? { Authorization: `Bearer ${token}` }
+    : {};
 }
 
 export async function login(username, password) {
