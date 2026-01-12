@@ -19,10 +19,13 @@ export default function AnimeDetail() {
   const [rating, setRating] = useState("");
 
   useEffect(() => {
-    fetchAnime();
+  fetchAnime();
+  if (isLoggedIn()) {
     checkFavorite();
     checkWatchlist();
-  }, [id]);
+  }
+}, [id]);
+
 
   async function fetchAnime() {
     const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
@@ -31,74 +34,99 @@ export default function AnimeDetail() {
   }
 
   async function checkFavorite() {
-    if (!isLoggedIn()) return;
-  const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
-  const data = await res.json();
+  if (!isLoggedIn()) return;
 
-  if (Array.isArray(data)) {
-    setIsFavorite(data.some(f => f.anime_id === Number(id)));
-  }
+  try {
+    const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
+    if (!res.ok) return;
+
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      setIsFavorite(data.some(f => f.anime_id === Number(id)));
+    }
+  } catch {}
 }
+
 
 
   async function toggleFavorite() {
-    if (!anime) return;
+  if (!anime) return;
 
-    if (isFavorite) {
-      await fetch(`${API_BASE}/favorites/${anime.mal_id}`, {
-        method: "DELETE",
-        headers: authHeader(),
-      });
-      setIsFavorite(false);
-    } else {
-      await fetch(`${API_BASE}/favorites`, {
-        method: "POST",
-        headers: authHeader(),
-        body: JSON.stringify({
-          anime_id: anime.mal_id,
-          anime_title: anime.title,
-          anime_image: anime.images?.jpg?.image_url,
-        }),
-      });
-      setIsFavorite(true);
-    }
-  }
-
-  async function checkWatchlist() {
-  if (!isLoggedIn()) return;
-  const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
-  const data = await res.json();
-
-  if (Array.isArray(data)) {
-    const entry = data.find(w => w.anime_id === Number(id));
-    if (entry) setWatchStatus(entry.status);
+  if (isFavorite) {
+    await fetch(`${API_BASE}/favorites/${anime.mal_id}`, {
+      method: "DELETE",
+      headers: authHeader(),
+    });
+    setIsFavorite(false);
+  } else {
+    await fetch(`${API_BASE}/favorites`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeader(),
+      },
+      body: JSON.stringify({
+        anime_id: anime.mal_id,
+        anime_title: anime.title,
+        anime_image: anime.images?.jpg?.image_url,
+      }),
+    });
+    setIsFavorite(true);
   }
 }
 
 
-  async function updateWatchlist(status) {
-    setWatchStatus(status);
-    await fetch(`${API_BASE}/watchlist`, {
-      method: "POST",
-      headers: authHeader(),
-      body: JSON.stringify({ anime_id: Number(id), status }),
-    });
-  }
+  async function checkWatchlist() {
+  if (!isLoggedIn()) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
+    if (!res.ok) return;
+
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      const entry = data.find(w => w.anime_id === Number(id));
+      if (entry) setWatchStatus(entry.status);
+    }
+  } catch {}
+}
+
+
+
+ async function updateWatchlist(status) {
+  setWatchStatus(status);
+
+  await fetch(`${API_BASE}/watchlist`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+    body: JSON.stringify({ anime_id: Number(id), status }),
+  });
+}
+
+
 
   async function saveJournal() {
-    if (!journal.trim()) return;
+  if (!journal.trim()) return;
 
-    await fetch(`${API_BASE}/journal`, {
-      method: "POST",
-      headers: authHeader(),
-      body: JSON.stringify({
-        anime_id: Number(id),
-        content: journal,
-        rating: rating ? Number(rating) : null,
-      }),
-    });
-    alert("Journal saved");
-  }
+  await fetch(`${API_BASE}/journal`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+    body: JSON.stringify({
+      anime_id: Number(id),
+      content: journal,
+      rating: rating ? Number(rating) : null,
+    }),
+  });
+
+  alert("Journal saved");
+}
+
 
   if (!anime) return null;
 

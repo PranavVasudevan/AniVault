@@ -90,9 +90,13 @@ export default function AnimeHome() {
   const qs = new URLSearchParams({ type });
   if (genre !== null && genre !== "") qs.append("genre", genre);
 
-  const res = await fetch(`${API_BASE}/ai/recommend?${qs}`, {
-    headers: authHeader(),
-  });
+  const res = await fetch(`${API_BASE}/ai/recommend?...`, {
+  headers: {
+    "Content-Type": "application/json",
+    ...authHeader(),
+  },
+});
+
 
   const data = await res.json();
   setAiAnime(Array.isArray(data) ? data : []);
