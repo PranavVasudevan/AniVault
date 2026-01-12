@@ -5,7 +5,9 @@ import { isLoggedIn } from "../services/auth";
 import SkeletonCard from "../components/SkeletonCard";
 
 
-const API_BASE = process.env.REACT_APP_API_URL
+const API_BASE =
+  process.env.REACT_APP_API_URL ||
+  "https://anivault-67h4.onrender.com";
 
 
 function dedupe(list) {

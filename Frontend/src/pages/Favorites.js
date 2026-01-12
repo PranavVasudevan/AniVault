@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { authHeader } from "../services/auth";
 import { isLoggedIn } from "../services/auth";
 
-const API_BASE = process.env.REACT_APP_API_URL
+const API_BASE =
+  process.env.REACT_APP_API_URL ||
+  "https://anivault-67h4.onrender.com";
 
 
 export default function Favorites() {
