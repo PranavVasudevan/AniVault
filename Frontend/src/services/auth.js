@@ -17,9 +17,7 @@ export function logout() {
 export function authHeader() {
   const token = getToken();
   if (!token) return {};
-  return {
-    Authorization: `Bearer ${token}`,
-  };
+  return { Authorization: `Bearer ${token}` };
 }
 
 export async function login(username, password) {
@@ -35,3 +33,14 @@ export async function login(username, password) {
   localStorage.setItem("token", data.access_token);
   return true;
 }
+
+export async function register(username, email, password) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, email, password }),
+  });
+
+  return res.ok;
+}
+
