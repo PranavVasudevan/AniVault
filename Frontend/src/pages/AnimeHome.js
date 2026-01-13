@@ -82,32 +82,33 @@ export default function AnimeHome() {
 
   async function loadAIRecommendations(type = "tv", genre = null) {
   if (!isLoggedIn()) return;
+
   setMode(type === "movie" ? "ai-movie" : "ai");
   setAnime([]);
   setAiAnime([]);
   setAiLoading(true);
 
-  const qs = new URLSearchParams({ type });
-  if (genre !== null && genre !== "") qs.append("genre", genre);
+  const qs = new URLSearchParams();
+  qs.append("type", type);
+  if (genre) qs.append("genre", genre);
 
-  const res = await fetch(`${API_BASE}/ai/recommend?...`, {
-  headers: {
-    "Content-Type": "application/json",
-    ...authHeader(),
-  },
-});
+  const res = await fetch(`${API_BASE}/ai/recommend?${qs.toString()}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader()
+    }
+  });
 
+  if (!res.ok) {
+    console.error("AI recommend failed", await res.text());
+    setAiLoading(false);
+    return;
+  }
 
   const data = await res.json();
   setAiAnime(Array.isArray(data) ? data : []);
   setAiLoading(false);
 }
-
-
-
-
-
-
 
   function goHome() {
     setMode("home");

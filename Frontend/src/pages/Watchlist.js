@@ -21,7 +21,14 @@ export default function Watchlist() {
 
   async function load() {
     try {
-      const res = await fetch(`${API_BASE}/watchlist`, { headers: authHeader() });
+      const res = await fetch(`${API_BASE}/watchlist`, {
+  headers: {
+    "Content-Type": "application/json",
+    ...authHeader()
+  },
+  credentials: "omit"
+});
+
       const data = await res.json();
       setEntries(data);
 

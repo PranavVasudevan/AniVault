@@ -21,7 +21,14 @@ export default function Favorites() {
 
   async function load() {
     try {
-      const res = await fetch(`${API_BASE}/favorites`, { headers: authHeader() });
+      const res = await fetch(`${API_BASE}/favorites`, {
+  headers: {
+    "Content-Type": "application/json",
+    ...authHeader()
+  },
+  credentials: "omit"
+});
+
       const data = await res.json();
       setItems(data);
 
@@ -40,9 +47,14 @@ export default function Favorites() {
 
   async function removeFavorite(id) {
     await fetch(`${API_BASE}/favorites/${id}`, {
-      method: "DELETE",
-      headers: authHeader(),
-    });
+  method: "DELETE",
+  headers: {
+    "Content-Type": "application/json",
+    ...authHeader()
+  },
+  credentials: "omit"
+});
+
     setItems(prev => prev.filter(x => x.anime_id !== id));
   }
 

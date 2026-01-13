@@ -13,9 +13,16 @@ export default function Profile() {
   useEffect(() => {
   if (!isLoggedIn()) return;
 
-  fetch(`${API_BASE}/journal`, { headers: authHeader() })
-    .then(r => r.json())
-    .then(setJournals);
+  fetch(`${API_BASE}/journal`, {
+  headers: {
+    "Content-Type": "application/json",
+    ...authHeader()
+  },
+  credentials: "omit"
+})
+  .then(r => r.json())
+  .then(setJournals);
+
 }, []);
 
   return (

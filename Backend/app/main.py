@@ -24,13 +24,13 @@ async def always_allow_options(request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://ani-atlas.vercel.app",
-        "http://localhost:3000",
+        "https://ani-atlas.vercel.app"
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 app.include_router(auth_router)

@@ -22,22 +22,26 @@ export default function Register() {
     setError("");
 
     try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
-      });
+      const res = await fetch(`${API_BASE}/register`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  credentials: "omit",
+  body: JSON.stringify({
+    username,
+    email,
+    password,
+  }),
+});
 
-      if (res.ok) {
-        navigate("/login");
-      } else {
-        const data = await res.json();
-  setError(data.detail || "Registration failed")
-      }
+if (res.ok) {
+  navigate("/login");
+} else {
+  const data = await res.json();
+  setError(data.detail || "Registration failed");
+}
+
     } catch {
       setError("Server error");
     }
