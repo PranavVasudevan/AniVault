@@ -10,6 +10,8 @@ from auth.auth_routes import router as auth_router
 from routes.recommendations import router as ai_router
 from app.database import engine, Base
 from app import models
+from auth.dependencies import debug
+
 
 app = FastAPI()
 
@@ -43,3 +45,5 @@ Base.metadata.create_all(bind=engine)
 @app.get("/")
 def root():
     return {"status": "ok"}
+
+app.include_router(debug)
