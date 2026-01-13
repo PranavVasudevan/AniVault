@@ -11,6 +11,9 @@ from routes.recommendations import router as ai_router
 from app.database import engine, Base
 from app import models
 from auth.dependencies import debug
+from auth.routes import router as auth_router
+
+
 
 
 app = FastAPI()
@@ -39,6 +42,7 @@ app.include_router(favorites_router)
 app.include_router(watchlist_router)
 app.include_router(journal_router)
 app.include_router(ai_router)
+app.include_router(auth_router)
 
 Base.metadata.create_all(bind=engine)
 
