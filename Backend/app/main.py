@@ -11,7 +11,8 @@ from routes.recommendations import router as ai_router
 from app.database import engine, Base
 from app import models
 from auth.dependencies import debug
-from auth.routes import router as auth_router
+from auth.auth_routes import router as auth_router
+
 
 
 
